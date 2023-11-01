@@ -1,0 +1,11 @@
+<title>Message</title>
+<h1>MESSAGE APP 6000</h1>
+<p>You are about to post following message:</p>
+<p>{{ message }}</p>
+<form action="/add_message" method="post">
+    <input type="hidden" name="message" value="{{ message }}">
+    <input type="submit" value="Confirm">
+</form>
+<form action="/front_page" method="get">
+    <input type="submit" value="Cancel">
+</form>

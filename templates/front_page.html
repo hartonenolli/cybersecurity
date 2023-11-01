@@ -2,14 +2,14 @@
 <h1>MESSAGE APP 6000</h1>
 <h2>Send a message:</h2>
 <form action="/message" method="post">
-    To: <input type="text" name="to" placeholder="To" required><br>
-    Message: <input type="text" name="message" placeholder="Message" required><br>
+    <textarea name="message" rows="5" cols="40" placeholder="Message" required></textarea><br>
     <input type="submit" value="Send">
 </form>
 <h2>Messages:</h2>
 <ul>
-    <li>From: <b>user1</b> To: <b>user2</b> Message: <b>Hi</b></li>
-    <li>From: <b>user2</b> To: <b>user1</b> Message: <b>Hi</b></li>
+    {% for message in messages %}
+        <input type="checkbox" name="message" value="{{ message.id }}">Comments: {{ message.memo }}   Posted: {{ message.time }}<br>
+    {% endfor %}
 </ul>
 <h2>Logout:</h2>
 <form action="/logout" method="post">
