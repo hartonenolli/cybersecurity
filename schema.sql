@@ -18,3 +18,6 @@ CREATE TABLE info_comment (
     time TIMESTAMP,
     comment TEXT
 );
+
+INSERT INTO person (username, password) VALUES ('arska', 'arska123');
+INSERT INTO person (username, password) VALUES ('user', 'user123');
