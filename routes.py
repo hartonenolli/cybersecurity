@@ -7,18 +7,19 @@ def index():
     if request.method == "GET":
         return render_template('index.html')
 
-@app.route('/register', methods=["POST"])
+@app.route('/register', methods=["POST"]) #02 03 07
 def register():
     if request.method == "POST":
         username = request.form["username"]
         password = request.form["password"]
+        password2 = request.form["password2"]
         user_exists = database_methods.get_person(username)
-        if user_exists == None:
+        if user_exists == None and password == password2:
             database_methods.add_person(username, password)
             return redirect('/')
         return redirect('/')
 
-@app.route('/front_page', methods=["POST", "GET"])
+@app.route('/front_page', methods=["POST", "GET"]) #{csrf_token}
 def front_page():
     if request.method == "POST":
         username = request.form["username"]
@@ -28,17 +29,25 @@ def front_page():
         if user_exists == username and user_password == True:
             session["username"] = username
             messages = database_methods.get_messages()
-            return render_template('front_page.html', messages=messages)
+            return render_template('front_page.html', username=username, messages=messages)
         return redirect('/')
     if request.method == "GET":
+        username = session["username"]
         messages = database_methods.get_messages()
-        return render_template('front_page.html', messages=messages)
+        return render_template('front_page.html', username=username, messages=messages)
 
 
 @app.route('/logout', methods=["POST"])
 def logout():
     if request.method == "POST":
         return redirect('/')
+
+@app.route('/my_messages/<username>', methods=["GET"]) #01
+def my_messages(username):
+    if request.method == "GET":
+        user_id = database_methods.get_person_id(username)
+        messages = database_methods.get_my_messages(user_id)
+        return render_template('my_messages.html', username=username, messages=messages)
 
 @app.route('/message', methods=["POST"])
 def message():

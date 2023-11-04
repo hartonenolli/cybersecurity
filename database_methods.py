@@ -48,6 +48,12 @@ def get_message_by_id(notes_id):
     message = result.fetchone()
     return message
 
+def get_my_messages(user_id):
+    sql = "SELECT * FROM info_message WHERE user_id=:user_id"
+    result = db.session.execute(text(sql), {'user_id':user_id})
+    messages = result.fetchall()
+    return messages
+
 def get_comments(notes_id):
     sql = "SELECT * FROM info_comment WHERE notes_id=:notes_id"
     result = db.session.execute(text(sql), {'notes_id':notes_id})
