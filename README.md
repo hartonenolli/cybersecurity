@@ -28,3 +28,9 @@ In (venv):
     pip install -r requirements.txt
     psql < schema.sql
     flask run
+
+App has two users:
+ - user1:
+     - username: arska, password: arksa123
+ - user2:
+     - username: user, password: user123     
