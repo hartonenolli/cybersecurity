@@ -1,9 +1,12 @@
 <title>MY MESSAGES</title>
 <h1>MESSAGE APP 6000</h1>
 Here are all of your messages:
-{% for message in messages %}
-    <h2>Message: {{ message.memo }}   Posted: {{ message.time }}</h2>
-{% endfor %}
+<form action="/delete_message" method="post">
+    {% for message in messages %}
+        <input type="radio" name="message" value="{{ message.id }}">Message: {{ message.memo }}   Posted: {{ message.time }}<br>
+    {% endfor %}
+<input type="submit" value="Delete">
+</form>
 <br>
 <form action="/front_page" method="get">
     <input type="submit" value="Back">

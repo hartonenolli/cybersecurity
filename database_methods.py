@@ -54,6 +54,13 @@ def get_my_messages(user_id):
     messages = result.fetchall()
     return messages
 
+def delete_message_and_comments(notes_id):
+    sql = "DELETE FROM info_comment WHERE notes_id=:notes_id"
+    db.session.execute(text(sql), {'notes_id':notes_id})
+    sql = "DELETE FROM info_message WHERE id=:notes_id"
+    db.session.execute(text(sql), {'notes_id':notes_id})
+    db.session.commit()
+
 def get_comments(notes_id):
     sql = "SELECT * FROM info_comment WHERE notes_id=:notes_id"
     result = db.session.execute(text(sql), {'notes_id':notes_id})

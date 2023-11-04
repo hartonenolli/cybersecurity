@@ -65,6 +65,16 @@ def add_message():
         messages = database_methods.get_messages()
         return render_template('front_page.html', messages=messages)
 
+@app.route('/delete_message', methods=["POST"])
+def delete_message():
+    if request.method == "POST":
+        notes_id = request.form["message"]
+        database_methods.delete_message_and_comments(notes_id)
+        username = session["username"]
+        user_id = database_methods.get_person_id(username)
+        messages = database_methods.get_my_messages(user_id)
+        return render_template('my_messages.html', username=username, messages=messages)
+
 @app.route('/comment', methods=["POST"])
 def comment():
     if request.method == "POST":
