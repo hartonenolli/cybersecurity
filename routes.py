@@ -7,6 +7,17 @@ def index():
     if request.method == "GET":
         return render_template('index.html')
 
+@app.route('/register', methods=["POST"])
+def register():
+    if request.method == "POST":
+        username = request.form["username"]
+        password = request.form["password"]
+        user_exists = database_methods.get_person(username)
+        if user_exists == None:
+            database_methods.add_person(username, password)
+            return redirect('/')
+        return redirect('/')
+
 @app.route('/front_page', methods=["POST", "GET"])
 def front_page():
     if request.method == "POST":

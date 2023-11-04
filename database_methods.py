@@ -26,6 +26,11 @@ def get_person_id(username):
     person_id = result.fetchone()[0]
     return person_id
 
+def add_person(username, password):
+    sql = "INSERT INTO person (username, password) VALUES (:username, :password)"
+    db.session.execute(text(sql), {'username':username, 'password':password})
+    db.session.commit()
+
 def add_message(message, user_id):
     sql = "INSERT INTO info_message (user_id, time, memo) VALUES (:user_id, NOW(), :message) "
     db.session.execute(text(sql), {'user_id':user_id, 'message':message})
