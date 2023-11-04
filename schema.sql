@@ -19,5 +19,7 @@ CREATE TABLE info_comment (
     comment TEXT
 );
 
+BEGIN TRANSACTION;
 INSERT INTO person (username, password) VALUES ('arska', 'arska123');
 INSERT INTO person (username, password) VALUES ('user', 'user123');
+COMMIT;
