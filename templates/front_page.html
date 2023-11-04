@@ -6,11 +6,12 @@
     <input type="submit" value="Send">
 </form>
 <h2>Messages:</h2>
-<ul>
+<form action="/comment" method="post">
     {% for message in messages %}
-        <input type="checkbox" name="message" value="{{ message.id }}">Comments: {{ message.memo }}   Posted: {{ message.time }}<br>
+        <input type="radio" name="message" value="{{ message.id }}">Comments: {{ message.memo }}   Posted: {{ message.time }}<br>
     {% endfor %}
-</ul>
+    <input type="submit" value="Comment">
+</form>
 <h2>Logout:</h2>
 <form action="/logout" method="post">
     <input type="submit" value="Log Out">

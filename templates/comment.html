@@ -1,0 +1,17 @@
+<title>COMMENTS</title>
+<h1>MESSAGE APP 6000</h1>
+<h2>Comments: 
+{{ message.memo }}   Posted: {{ message.time }}<br>
+</h2>
+{% for comment in comments %}
+    <h3>Comment: {{ comment.comment }}   Posted: {{ comment.time }}</h3>
+{% endfor %}
+<br>
+<form action="/add_comment" method="post">
+    <input type="hidden" name="message" value="{{ message.id }}">
+    <textarea name="comment" rows="5" cols="40" placeholder="Comment" required></textarea><br>
+    <input type="submit" value="Add Comment">
+</form>
+<form action="/front_page" method="get">
+    <input type="submit" value="Back">
+</form>

@@ -44,3 +44,23 @@ def add_message():
         database_methods.add_message(message, user_id)
         messages = database_methods.get_messages()
         return render_template('front_page.html', messages=messages)
+
+@app.route('/comment', methods=["POST"])
+def comment():
+    if request.method == "POST":
+        notes_id = request.form["message"]
+        message = database_methods.get_message_by_id(notes_id)
+        comments = database_methods.get_comments(notes_id)
+        return render_template('comment.html', message=message, comments=comments)
+    
+@app.route('/add_comment', methods=["POST"])
+def add_comment():
+    if request.method == "POST":
+        message_id = request.form["message"]
+        comment = request.form["comment"]
+        username = session["username"]
+        user_id = database_methods.get_person_id(username)
+        database_methods.add_comment(comment, user_id, message_id)
+        message = database_methods.get_message_by_id(message_id)
+        comments = database_methods.get_comments(message_id)
+        return render_template('comment.html', message=message, comments=comments)
