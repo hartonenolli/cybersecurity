@@ -74,6 +74,9 @@ def logout():
 @app.route('/my_messages/<username>', methods=["GET"]) #01
 def my_messages(username):
     if request.method == "GET":
+        # Here we have broken access control
+        # this should be done whit every request
+        # and not only with GET requests
         # Here we should check the csrf token
         # but this is not done
         # this is how it could be done:
