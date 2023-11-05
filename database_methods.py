@@ -20,6 +20,15 @@ def get_person_password(username, password):
     except Exception:
         return False
 
+#def get_person_password_hash(username):
+#    sql = "SELECT password FROM person WHERE username=:username"
+#    result = db.session.execute(text(sql), {'username':username})
+#    try:
+#        person_password = result.fetchone()[0]
+#        return person_password
+#    except Exception:
+#        return None
+
 def get_person_id(username):
     sql = "SELECT id FROM person WHERE username=:username"
     result = db.session.execute(text(sql), {'username':username})
@@ -42,9 +51,16 @@ def get_messages():
     messages = result.fetchall()
     return messages
 
+# Here we have injection vulnerability
+# but this is how it could be fixed:
+#def get_message_by_id(notes_id):
+#    sql = f"SELECT * FROM info_message WHERE id=:notes_id"
+#    result = db.session.execute(text(sql), {'notes_id':notes_id})
+#    message = result.fetchone()
+#    return message
 def get_message_by_id(notes_id):
-    sql = "SELECT * FROM info_message WHERE id=:message_id"
-    result = db.session.execute(text(sql), {'message_id':notes_id})
+    sql = f"SELECT * FROM info_message WHERE id={notes_id}"
+    result = db.session.execute(text(sql))
     message = result.fetchone()
     return message
 
