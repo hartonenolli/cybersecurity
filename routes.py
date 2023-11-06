@@ -34,35 +34,38 @@ def front_page():
     if request.method == "POST":
         username = request.form["username"]
         password = request.form["password"]
-        user_exists = database_methods.get_person(username)
-        # Here we check if the user exists and if the password is correct
-        # database method should hash the password and compare the hashes
-        # but this is not done
-        # this is how it could be done:
-        # importing werkzeug.security or other library
-        # generating a hash from the password
-        # comparing the hash with the hash in the database
-        # if the hashes match, the password is correct
-        # for example:
-        # user_password_hash = database_methods.get_person_password_hash(username)
-        # user_password = werkzeug.security.check_password_hash(user_password_hash, password)
-        user_password = database_methods.get_person_password(username, password)
-        if user_exists == username and user_password == True:
-            session["username"] = username
-            # Here we should generate a new csrf token
+        # Injection here
+        user_data = database_methods.get_person_name_and_pass(username)
+        try:
+            if user_data[0][0] == username and user_data[0][1] == password:
+            # Here we check if the user exists and if the password is correct
+            # database method should hash the password and compare the hashes
             # but this is not done
             # this is how it could be done:
-            # importing secrets
-            # generating a new csrf token
-            # session["csrf_token"] = secrets.token_hex(16)
-            messages = database_methods.get_messages()
-            return render_template('front_page.html', username=username, messages=messages)
-        return redirect('/')
+            # importing werkzeug.security or other library
+            # generating a hash from the password
+            # comparing the hash with the hash in the database
+            # if the hashes match, the password is correct
+            # for example:
+            # user_password_hash = database_methods.get_person_password_hash(username)
+            # user_password = werkzeug.security.check_password_hash(user_password_hash, password)
+            #user_password = database_methods.get_person_password(username, password)
+                session["username"] = username
+                # Here we should generate a new csrf token
+                # but this is not done
+                # this is how it could be done:
+                # importing secrets
+                # generating a new csrf token
+                # session["csrf_token"] = secrets.token_hex(16)
+                messages = database_methods.get_messages()
+                return render_template('front_page.html', username=username, messages=messages)
+        except Exception:
+            pass
+        return render_template('try_again.html', user_data=user_data)
     if request.method == "GET":
         username = session["username"]
         messages = database_methods.get_messages()
         return render_template('front_page.html', username=username, messages=messages)
-
 
 @app.route('/logout', methods=["POST"])
 def logout():
@@ -116,8 +119,6 @@ def delete_message():
 def comment():
     if request.method == "POST":
         notes_id = request.form["message"]
-        # Here we have injection vulnerability
-        # proposed fix in database_methods.py
         message = database_methods.get_message_by_id(notes_id)
         comments = database_methods.get_comments(notes_id)
         return render_template('comment.html', message=message, comments=comments)

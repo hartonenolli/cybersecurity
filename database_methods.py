@@ -2,23 +2,23 @@ from db import db
 from sqlalchemy.sql import text
 
 def get_person(username):
-    sql = "SELECT username FROM person WHERE username=:username"
-    result = db.session.execute(text(sql), {'username':username})
+    sql = f"SELECT username FROM person WHERE username='{username}'"
+    result = db.session.execute(text(sql))
     try:
         person = result.fetchone()[0]
         return person
     except TypeError:
         return None
 
-def get_person_password(username, password):
-    sql = "SELECT password FROM person WHERE username=:username"
-    result = db.session.execute(text(sql), {'username':username})
+#Injection here!
+def get_person_name_and_pass(username):
+    sql = f"SELECT username, password FROM person WHERE username='{username}'"
+    result = db.session.execute(text(sql))
     try:
-        person_password = result.fetchone()[0]
-        if person_password == password:
-            return True
+        user_data = result.fetchall()
+        return user_data
     except Exception:
-        return False
+        return None
 
 #def get_person_password_hash(username):
 #    sql = "SELECT password FROM person WHERE username=:username"
@@ -51,16 +51,9 @@ def get_messages():
     messages = result.fetchall()
     return messages
 
-# Here we have injection vulnerability
-# but this is how it could be fixed:
-#def get_message_by_id(notes_id):
-#    sql = f"SELECT * FROM info_message WHERE id=:notes_id"
-#    result = db.session.execute(text(sql), {'notes_id':notes_id})
-#    message = result.fetchone()
-#    return message
 def get_message_by_id(notes_id):
-    sql = f"SELECT * FROM info_message WHERE id={notes_id}"
-    result = db.session.execute(text(sql))
+    sql = "SELECT * FROM info_message WHERE id=:notes_id"
+    result = db.session.execute(text(sql), {'notes_id':notes_id})
     message = result.fetchone()
     return message
 
