@@ -34,7 +34,11 @@ def front_page():
     if request.method == "POST":
         username = request.form["username"]
         password = request.form["password"]
-        # Injection here
+        # Here is a injection vulnerability
+        # malicious user could use the following values
+        # username = "' OR '1'='1"
+        # password = "' OR '1'='1"
+        # and get all of the usernames and passwords
         user_data = database_methods.get_person_name_and_pass(username)
         try:
             if user_data[0][0] == username and user_data[0][1] == password:

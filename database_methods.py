@@ -10,7 +10,20 @@ def get_person(username):
     except TypeError:
         return None
 
-#Injection here!
+# Here is a SQL injection vulnerability
+# malicious user could use the following values
+# username = "' OR '1'='1"
+# password = "' OR '1'='1"
+# and get all of the usernames and passwords
+# This is fixed in the next function
+#def get_person_password(username, password):
+#    sql = "SELECT username, password FROM person WHERE username=:username AND password=:password"
+#    result = db.session.execute(text(sql), {'username':username, 'password':password})
+#    try:
+#        user_data = result.fetchall()
+#        return user_data
+#    except Exception:
+#        return None
 def get_person_name_and_pass(username):
     sql = f"SELECT username, password FROM person WHERE username='{username}'"
     result = db.session.execute(text(sql))
