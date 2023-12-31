@@ -39,9 +39,9 @@ def front_page():
         # username = "' OR '1'='1"
         # password = "' OR '1'='1"
         # and get all of the usernames and passwords
-        user_data = database_methods.get_person_name_and_pass(username)
+        user_data = database_methods.get_person_name_and_pass(username, password)
         try:
-            if user_data[0][0] == username and user_data[0][1] == password:
+            if user_data == True:
             # Here we check if the user exists and if the password is correct
             # database method should hash the password and compare the hashes
             # but this is not done

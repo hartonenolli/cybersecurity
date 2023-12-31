@@ -12,24 +12,30 @@ def get_person(username):
 
 # Here is a SQL injection vulnerability
 # malicious user could use the following values
-# username = "' OR '1'='1"
-# password = "' OR '1'='1"
-# and get all of the usernames and passwords
-# This is fixed in the next function
-#def get_person_password(username, password):
-#    sql = "SELECT username, password FROM person WHERE username=:username AND password=:password"
-#    result = db.session.execute(text(sql), {'username':username, 'password':password})
-#    try:
-#        user_data = result.fetchall()
-#        return user_data
-#    except Exception:
-#        return None
-def get_person_name_and_pass(username):
-    sql = f"SELECT username, password FROM person WHERE username='{username}'"
+# username = "arska"
+# password = "' OR id='1"
+# and being able to log in to arskas account
+# Malicious user needs to only now the username and id of the account
+# to be able to log in to the account
+# To fix this vulnerability, we should use parameterized queries
+# and return only the username and password
+# proposed solution:
+# def get_person_name_and_pass(username, password):
+#     sql = "SELECT username, password FROM person WHERE username=:username AND password=:password"
+#     result = db.session.execute(text(sql), {'username':username, 'password':password})
+#     try:
+#         user_data = result.fetchall()
+#         if len(user_data) == 1:
+#             return user_data
+#     except Exception:
+#         return None
+def get_person_name_and_pass(username, password):
+    sql = f"SELECT username, password FROM person WHERE username='{username}' AND password='{password}'"
     result = db.session.execute(text(sql))
     try:
         user_data = result.fetchall()
-        return user_data
+        if len(user_data) == 1:
+            return True
     except Exception:
         return None
 
