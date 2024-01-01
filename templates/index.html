@@ -20,5 +20,9 @@
     - at least one uppercase letter
     - at least one lowercase letter
     - at least one number
-    - at least one special character
+
+    Password should be checked at routes.py so that it contains the requirements
 -->
+{% if error_msg %}
+    <h2>{{ error_msg }}</h2>
+{% endif %}
