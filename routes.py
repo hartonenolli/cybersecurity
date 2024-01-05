@@ -108,12 +108,11 @@ def my_messages(username):
     if request.method == "GET":
         # Here we have broken access control
         # this should be done with every request
-        # and not only with GET requests
-        # Here we should check the csrf token
+        # app should check if the user is logged in
         # but this is not done
         # this is how it could be done:
-        # if session["csrf_token"] != request.args.get("csrf_token"):
-            # abort(403)
+        # if session["username"] != username:
+        #     abort(403)
         user_id = database_methods.get_person_id(username)
         messages = database_methods.get_my_messages(user_id)
         return render_template('my_messages.html', username=username, messages=messages)
