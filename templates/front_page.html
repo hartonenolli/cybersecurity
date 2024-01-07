@@ -22,5 +22,6 @@
 </form>
 <h2>Delete user:</h2>
 <form action="/delete_user/{{ username }}" method="get">
+    <!-- <input type="hidden" name="csrf_token" value="{{ csrf_token }}"> -->
     <input type="submit" value="Delete User">
 </form>

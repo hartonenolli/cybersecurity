@@ -10,6 +10,15 @@ def get_person(username):
     except TypeError:
         return None
 
+def get_person_name_and_pass(username, password):
+    sql = f"SELECT username, password FROM person WHERE username='{username}' AND password='{password}'"
+    result = db.session.execute(text(sql))
+    try:
+        user_data = result.fetchall()
+        if len(user_data) == 1:
+            return True
+    except Exception:
+        return None
 # Here is a SQL injection vulnerability
 # malicious user could use the following values
 # username = "arska"
@@ -29,24 +38,6 @@ def get_person(username):
 #             return user_data
 #     except Exception:
 #         return None
-def get_person_name_and_pass(username, password):
-    sql = f"SELECT username, password FROM person WHERE username='{username}' AND password='{password}'"
-    result = db.session.execute(text(sql))
-    try:
-        user_data = result.fetchall()
-        if len(user_data) == 1:
-            return True
-    except Exception:
-        return None
-
-#def get_person_password_hash(username):
-#    sql = "SELECT password FROM person WHERE username=:username"
-#    result = db.session.execute(text(sql), {'username':username})
-#    try:
-#        person_password = result.fetchone()[0]
-#        return person_password
-#    except Exception:
-#        return None
 
 def get_person_id(username):
     sql = "SELECT id FROM person WHERE username=:username"

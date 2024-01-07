@@ -11,7 +11,7 @@ def index():
         return render_template('index.html')
     
 
-@app.route('/register', methods=["POST"]) #02
+@app.route('/register', methods=["POST"])
 def register():
     if request.method == "POST":
         username = request.form["username"]
@@ -22,18 +22,7 @@ def register():
         # to see if it is in most common passwords
         # we could use a library like zxcvbn
         # to do this, we should import zxcvbn
-        # and use it to check the password
-        # for example:
-        # password_strength = zxcvbn.password_strength(password)
-        # if password_strength < 3:
-        #     error_msg = "Password is not strong enough"
-        #     return render_template('try_again.html', error_msg=error_msg)
-        # To see that the password includes at least one number, one uppercase letter and one lowercase letter
-        # it could be done using regex
-        # for example:
-        # if len(password) < 8 or re.search('[0-9]', password) is None or re.search('[A-Z]', password) is None or re.search('[a-z]', password) is None:
-        #     error_msg = "Password is not strong enough"
-        #     return render_template('try_again.html', error_msg=error_msg)
+        # and use it to check the password strength
         user_exists = database_methods.get_person(username)
         if user_exists == None and password == password2:
             # Here we sould hash the password
@@ -42,15 +31,30 @@ def register():
             # importing werkzeug.security or other library
             # generating a hash from the password
             # storing the hash in the database
-            # for example:
-            # password_hash = werkzeug.security.generate_password_hash(password)
-            # database_methods.add_person(username, password_hash)
             database_methods.add_person(username, password)
             return redirect('/')
         error_msg = "Username is already in use or passwords do not match"
         return render_template('try_again.html', error_msg=error_msg)
+    # if request.method == "POST":
+    #     username = request.form["username"]
+    #     password = request.form["password"]
+    #     password2 = request.form["password2"]
+    #     password_strength = zxcvbn.password_strength(password)
+    #     if password_strength < 3:
+    #         error_msg = "Password is not strong enough"
+    #         return render_template('try_again.html', error_msg=error_msg)
+    #     if len(password) < 8 or re.search('[0-9]', password) is None or re.search('[A-Z]', password) is None or re.search('[a-z]', password) is None:
+    #         error_msg = "Password is not strong enough"
+    #         return render_template('try_again.html', error_msg=error_msg)
+    #     user_exists = database_methods.get_person(username)
+    #     if user_exists == None and password == password2:
+    #         password_hash = werkzeug.security.generate_password_hash(password)
+    #         database_methods.add_person(username, password_hash)
+    #         return redirect('/')
+    #     error_msg = "Username is already in use or passwords do not match"
+    #     return render_template('try_again.html', error_msg=error_msg)
 
-@app.route('/front_page', methods=["POST", "GET"]) #{csrf_token} #02 #07
+@app.route('/front_page', methods=["POST", "GET"])
 def front_page():
     if request.method == "POST":
         username = request.form["username"]
@@ -60,6 +64,8 @@ def front_page():
         # username = "arska"
         # password = "' OR id='1"
         # and being able to log in to arskas account
+        # database method should return only the username and password
+        # now it return Boolean
         user_data = database_methods.get_person_name_and_pass(username, password)
         try:
             if user_data == True:
@@ -74,17 +80,10 @@ def front_page():
             # generating a hash from the password
             # comparing the hash with the hash in the database
             # if the hashes match, the password is correct
-            # for example:
-            # user_password_hash = database_methods.get_person_password_hash(username)
-            # user_password = werkzeug.security.check_password_hash(user_password_hash, password)
-            #user_password = database_methods.get_person_password(username, password)
                 session["username"] = username
                 # Here we should generate a new csrf token
-                # but this is not done
-                # this is how it could be done:
-                # importing secrets
-                # generating a new csrf token
-                # session["csrf_token"] = secrets.token_hex(16)
+                # and store it in the session
+                # we should start by importin secrets
                 messages = database_methods.get_messages()
                 return render_template('front_page.html', username=username, messages=messages)
         except Exception:
@@ -95,6 +94,25 @@ def front_page():
         username = session["username"]
         messages = database_methods.get_messages()
         return render_template('front_page.html', username=username, messages=messages)
+    # if request.method == "POST":
+    #     username = request.form["username"]
+    #     password = request.form["password"]
+    #     hashed_password = werkzeug.security.generate_password_hash(password)
+    #     user_data = database_methods.get_person_name_and_pass(username, hashed_password)
+    #     try:
+    #         if user_data[0][0] == username and user_data[0][1] == hashed_password:
+    #             session["username"] = username
+    #             session["csrf_token"] = secrets.token_hex(16)
+    #             messages = database_methods.get_messages()
+    #             return render_template('front_page.html', username=username, messages=messages)
+    #     except Exception:
+    #         pass
+    #     error_msg = "Username or password is incorrect"
+    #     return render_template('try_again.html', error_msg=error_msg)
+    # if request.method == "GET":
+    #     username = session["username"]
+    #     messages = database_methods.get_messages()
+    #     return render_template('front_page.html', username=username, messages=messages)
 
 @app.route('/logout', methods=["POST"])
 def logout():
@@ -106,16 +124,21 @@ def logout():
 @app.route('/my_messages/<username>', methods=["GET"]) #01
 def my_messages(username):
     if request.method == "GET":
-        # Here we have broken access control
-        # this should be done with every request
-        # app should check if the user is logged in
-        # but this is not done
-        # this is how it could be done:
-        # if session["username"] != username:
-        #     abort(403)
         user_id = database_methods.get_person_id(username)
         messages = database_methods.get_my_messages(user_id)
         return render_template('my_messages.html', username=username, messages=messages)
+    # Here we have broken access control
+    # method should be POST
+    # app should check if the user is logged in
+    # but this is not done
+    # this is how it could be done:
+    # if request.method == "POST":
+    #     username = session["username"]
+    #     if username != username:
+    #         abort(403)
+    #     user_id = database_methods.get_person_id(username)
+    #     messages = database_methods.get_my_messages(user_id)
+    #     return render_template('my_messages.html', username=username, messages=messages)
 
 @app.route('/message', methods=["POST"])
 def message():
@@ -149,6 +172,15 @@ def delete_user(username):
         if session["username"] != username:
             abort(403)
         return render_template('delete_user.html', username=username)
+    # Here we should check the csrf token
+    # and the method should be POST
+    # but this is not done
+    # this is how it could be done:
+    # if request.method == "POST":
+    #    if session["username"] != username:
+    #    if session["csrf_token"] != request.form["csrf_token"]:
+    #        abort(403)
+    #    return render_template('delete_user.html', username=username)
 
 @app.route('/delete_confirm/<username>', methods=["GET"])
 def delete_user_confirm(username):
@@ -159,6 +191,19 @@ def delete_user_confirm(username):
         database_methods.delete_user_and_messages(user_id)
         session.pop("username", None)
         return redirect('/')
+    # Here we should check the csrf token
+    # and the method should be POST
+    # but this is not done
+    # this is how it could be done:
+    # if request.method == "POST":
+    #    if session["username"] != username:
+    #        abort(403)
+    #    if session["csrf_token"] != request.form["csrf_token"]:
+    #        abort(403)
+    #    user_id = database_methods.get_person_id(username)
+    #    database_methods.delete_user_and_messages(user_id)
+    #    session.pop("username", None)
+    #    return redirect('/')
 
 
 @app.route('/comment', methods=["POST"])
