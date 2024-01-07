@@ -6,7 +6,6 @@
     <input type="submit" value="Send">
 </form>
 <form action="/my_messages/{{ username }}" method="get">
-    <!--<input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">--> 
     <input type="hidden" name="username" value="{{ username }}">
     <input type="submit" value="My Messages">
 </form>
@@ -20,4 +19,8 @@
 <h2>Logout:</h2>
 <form action="/logout" method="post">
     <input type="submit" value="Log Out">
+</form>
+<h2>Delete user:</h2>
+<form action="/delete_user/{{ username }}" method="get">
+    <input type="submit" value="Delete User">
 </form>

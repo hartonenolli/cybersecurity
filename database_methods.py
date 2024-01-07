@@ -89,6 +89,15 @@ def delete_message_and_comments(notes_id):
     db.session.execute(text(sql), {'notes_id':notes_id})
     db.session.commit()
 
+def delete_user_and_messages(user_id):
+    sql = "DELETE FROM info_comment WHERE user_id=:user_id"
+    db.session.execute(text(sql), {'user_id':user_id})
+    sql = "DELETE FROM info_message WHERE user_id=:user_id"
+    db.session.execute(text(sql), {'user_id':user_id})
+    sql = "DELETE FROM person WHERE id=:user_id"
+    db.session.execute(text(sql), {'user_id':user_id})
+    db.session.commit()
+
 def get_comments(notes_id):
     sql = "SELECT * FROM info_comment WHERE notes_id=:notes_id"
     result = db.session.execute(text(sql), {'notes_id':notes_id})

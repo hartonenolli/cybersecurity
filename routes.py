@@ -131,7 +131,7 @@ def add_message():
         user_id = database_methods.get_person_id(username)
         database_methods.add_message(message, user_id)
         messages = database_methods.get_messages()
-        return render_template('front_page.html', messages=messages)
+        return render_template('front_page.html', username=username, messages=messages)
 
 @app.route('/delete_message', methods=["POST"])
 def delete_message():
@@ -142,6 +142,24 @@ def delete_message():
         user_id = database_methods.get_person_id(username)
         messages = database_methods.get_my_messages(user_id)
         return render_template('my_messages.html', username=username, messages=messages)
+
+@app.route('/delete_user/<username>', methods=["GET"])
+def delete_user(username):
+    if request.method == "GET":
+        if session["username"] != username:
+            abort(403)
+        return render_template('delete_user.html', username=username)
+
+@app.route('/delete_confirm/<username>', methods=["GET"])
+def delete_user_confirm(username):
+    if request.method == "GET":
+        if session["username"] != username:
+            abort(403)
+        user_id = database_methods.get_person_id(username)
+        database_methods.delete_user_and_messages(user_id)
+        session.pop("username", None)
+        return redirect('/')
+
 
 @app.route('/comment', methods=["POST"])
 def comment():
