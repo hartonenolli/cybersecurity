@@ -48,6 +48,7 @@ def register():
     #         return render_template('try_again.html', error_msg=error_msg)
     #     if username == password:
     #         error_msg = "Username and password cannot be the same"
+    #         return render_template('try_again.html', error_msg=error_msg)
     #     user_exists = database_methods.get_person(username)
     #     if user_exists == None and password == password2:
     #         password_hash = werkzeug.security.generate_password_hash(password)
