@@ -46,6 +46,8 @@ def register():
     #     if len(password) < 8 or re.search('[0-9]', password) is None or re.search('[A-Z]', password) is None or re.search('[a-z]', password) is None:
     #         error_msg = "Password is not strong enough"
     #         return render_template('try_again.html', error_msg=error_msg)
+    #     if username == password:
+    #         error_msg = "Username and password cannot be the same"
     #     user_exists = database_methods.get_person(username)
     #     if user_exists == None and password == password2:
     #         password_hash = werkzeug.security.generate_password_hash(password)
